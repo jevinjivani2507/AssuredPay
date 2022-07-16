@@ -8,7 +8,7 @@ const Dashboard = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    axios.get("https://5175-2405-201-200d-1b71-a57b-1a81-3931-e32.ngrok.io/products").then(res => {
+    axios.get("http://localhost:5000/products").then(res => {
       console.log(res.data);
       setProducts(res.data);
     });
