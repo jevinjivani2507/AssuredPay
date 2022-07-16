@@ -50,7 +50,7 @@ const Item = (props) => {
         <button onClick={handleQuantityMinus}>
           <FontAwesomeIcon icon={faMinus} />
         </button>
-        <input readOnly className="mx-2 border text-center w-8" type="text" value={props.quantity} />
+        <input readOnly className="mx-2 border text-center w-8" type="text" value={quantity} />
         <button onClick={handleQuantityPlus}>
           <FontAwesomeIcon icon={faPlus} />
         </button>
