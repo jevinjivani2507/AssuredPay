@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from "react";
-
-
+import { useDispatch ,useSelector } from "react-redux";
+import { ADD_TO_CART } from "../Redux/ActionTypes";
 
 const Card = (props) => {
+  const dispatch = useDispatch();
+  const items = useSelector((state) => state.cart.items);
+  // console.log(items);
+  const addToCart = (e) => {
+    e.preventDefault();
+    dispatch({ type: ADD_TO_CART, payload: props});
+  }
 
   return (
     <div class="w-1/4 justify-center p-5">
@@ -20,6 +27,7 @@ const Card = (props) => {
             {props.company}
           </p>
           <button
+            onClick={addToCart}
             type="button"
             class="btn py-3 px-6"
           >

@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
-import Card from "./Card";
-// import productList from "../productList";
-import axios from "axios";
+import React, { useEffect, useState} from 'react'
+import Card from './Card'
+import axios from 'axios';
 
 const Dashboard = () => {
 
@@ -16,20 +15,20 @@ const Dashboard = () => {
 
 
   return (
-    <div className="flex m-10 flex-wrap">
-      {products.map((pId) => (
-        <Card
-          key={pId.id}
-          id={pId.id}
-          name={pId.name}
-          company={pId.company}
-          image={pId.image}
-          mrp={pId.mrp}
-          quantity={0}
-        />
-      ))}
+    <div className='flex m-10 flex-wrap'>
+        {products.map((pId) => (
+          <Card
+            key={pId.id}
+            id={pId.id}
+            name={pId.name}
+            company={pId.company}
+            image={pId.image}
+            mrp={pId.mrp}
+            quantity={0}
+          />
+        ))}
     </div>
   );
 };
 
-export default Dashboard;
+export default Dashboard
