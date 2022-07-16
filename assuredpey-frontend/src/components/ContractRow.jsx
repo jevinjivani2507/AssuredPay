@@ -23,7 +23,28 @@ const ContractRow = ({address}) => {
     const contract = new ethers.Contract(address, aShortPayABI, provider);
     const status = await contract.s_orderState();
     console.log(status);
-    // console.log(status);
+  };
+
+  const getInfo = async (e) => {
+    e.preventDefault();
+    console.log("Yey, I am clicked");
+    // console.log(address);
+    const contract = new ethers.Contract(address, aShortPayABI, provider);
+    const balance = await contract.balance();
+    const i_amount = await contract.i_amount();
+    // const i_interval = await contract.i_interval();
+    const order = await contract.order();
+    const owner = await contract.owner();
+    const result = await contract.result();
+    const s_lastTimestamp = await contract.s_lastTimestamp();
+
+    console.log(balance);
+    console.log(i_amount);
+    // console.log(i_interval);
+    console.log(order);
+    console.log(owner);
+    console.log(result);
+    console.log(s_lastTimestamp);
   };
 
   const withdrawContract = async (e) => {
@@ -45,7 +66,7 @@ const ContractRow = ({address}) => {
       <div className="flex justify-between w-full h-[70px] bg-white p-3 rounded-[20px] shadow-sm items-center">
         <h1 className="flex text-center ml-5">{address}</h1>
         <div className="m-0 p-0">
-          <button className="px-3 py-2 mx-3 bg-gray-300 rounded-[5px] text-sm uppercase font-semibold">
+          <button className="px-3 py-2 mx-3 bg-gray-300 rounded-[5px] text-sm uppercase font-semibold" onClick={getInfo}>
             View Info
           </button>
           <button className="px-3 py-2 mx-3 bg-red-500 rounded-[5px] text-sm uppercase font-semibold" onClick={withdrawContract}>

@@ -24,7 +24,6 @@ const Dashboard = () => {
             company={pId.company}
             image={pId.image}
             mrp={pId.mrp}
-            quantity={0}
           />
         ))}
     </div>
