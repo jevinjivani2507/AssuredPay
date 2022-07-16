@@ -65,7 +65,14 @@ const createRequest = (input, callback) => {
       callback(response.status, Requester.success(jobRunID, response.data));
     })
     .catch((error) => {
-      callback(500, Requester.errored(jobRunID, error));
+      console.log(error.data);
+      var resp = JSON.parse(JSON.stringify(error));
+      resp.data = {
+        tag: "notfound",
+      };
+      console.log("----------\n", resp);
+
+      callback(200, Requester.success(jobRunID, resp));
     });
 };
 
