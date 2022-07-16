@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import Card from './Card'
 import axios from 'axios';
 
@@ -8,7 +8,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     axios.get("http://localhost:5000/products").then(res => {
-      console.log(res.data);
+      // console.log(res.data);
       setProducts(res.data);
     });
   }, []);
@@ -28,7 +28,8 @@ const Dashboard = () => {
           />
         ))}
     </div>
-  );
-};
+
+  )
+}
 
 export default Dashboard
