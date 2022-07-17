@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Item from "./Item";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -15,6 +15,7 @@ function Cart() {
   const dispatch = useDispatch();
   const items = useSelector((state) => state.cart.items);
   const user = useSelector((state) => state.cart.user);
+
   const vendorContractAddress = useSelector(
     (state) => state.cart.vendorContractAddress
   );
@@ -55,11 +56,10 @@ function Cart() {
   };
 
   useEffect(() => {
-    console.log(JSON.stringify(paymentDetails).length)
-    if(JSON.stringify(paymentDetails).length > 2){
+    console.log(JSON.stringify(paymentDetails).length);
+    if (JSON.stringify(paymentDetails).length > 2) {
       makePayment();
     }
-    
   }, [paymentDetails]);
 
   const fetchPayment = async (e) => {
@@ -133,14 +133,22 @@ function Cart() {
       >
         <h1 className="font-semibold text-2xl border-b pb-8">Order Summary</h1>
         <div className="flex justify-between mt-10 mb-5">
-          <span className="font-semibold text-sm uppercase">Items 3</span>
-          <span className="font-semibold text-sm">590$</span>
+          <span className="font-semibold text-sm uppercase">
+            Items {items.length}
+          </span>
+          <span className="font-semibold text-sm">
+            {items.reduce((acc, item) => {
+              return acc + item.mrp;
+            }, 0).toFixed(4)}{" "}
+            ETC
+          </span>
         </div>
         <div>
           <label className="font-medium inline-block mb-3 text-sm uppercase">
             Shipping
           </label>
           <select className="block p-2 text-gray-600 w-full text-sm">
+            <option>AssuredPay</option>
             <option>Standard shipping - $10.00</option>
           </select>
         </div>
@@ -164,7 +172,12 @@ function Cart() {
         <div className="border-t mt-8">
           <div className="flex font-semibold justify-between py-6 text-sm uppercase">
             <span>Total cost</span>
-            <span>$600</span>
+            <span>
+              {items.reduce((acc, item) => {
+                return acc + item.mrp;
+              }, 0).toFixed(4)}{" "}
+              ETC
+            </span>
           </div>
           <div className="flex">
             <button className="btn py-3 w-full ml-1" onClick={fetchPayment}>

@@ -4,6 +4,7 @@ import {
   USER,
   VENDOR_CONTRACT_ADDRESS,
   REMOVE_ONE_ITEM,
+  TOTAL_AMOUNT,
 } from "../ActionTypes";
 
 export const cart = (
@@ -17,6 +18,9 @@ export const cart = (
     vendorContractAddress: localStorage.getItem("vendorContractAddress")
       ? JSON.parse(localStorage.getItem("vendorContractAddress"))
       : "",
+    totalAmount: localStorage.getItem("totalAmount")
+      ? JSON.parse(localStorage.getItem("totalAmount"))
+      : 0,
   },
   action
 ) => {
@@ -29,6 +33,7 @@ export const cart = (
       return {
         ...state,
         items: [...state.items, action.payload],
+        totalAmount: state.totalAmount + action.payload.price,
       };
     }
     case REMOVE_FROM_CART: {
@@ -39,6 +44,7 @@ export const cart = (
       return {
         ...state,
         items: state.items.filter((item) => item.id !== action.payload),
+        totalAmount: state.totalAmount - action.payload.price,
       };
     }
     case REMOVE_ONE_ITEM: {
@@ -52,6 +58,7 @@ export const cart = (
         return {
           ...state,
           items: newItems,
+          totalAmount: state.totalAmount - action.payload.price,
         };
       }else{
         return state;
