@@ -29,6 +29,7 @@ const ContractRow = ({ address }) => {
 
   },[])
 
+
   const showStatus = async (e) => {
     e.preventDefault();
     // console.log(address);
@@ -67,11 +68,36 @@ const ContractRow = ({ address }) => {
     console.log(await daiContract.i_vendor());
     console.log(await daiContract.i_customer());
 
-    const balance = ethers.utils.formatEther(await daiContract.getbalance());
-    console.log(balance);
+    // const balance = ethers.utils.formatEther(await daiContract.getbalance());
+    // console.log(balance);
 
     const withdraw = await daiContract.withdrawAmount();
     await withdraw.wait();
+
+    // console.log(Withdraw);
+    // await erc20.transfer(data.get("recipient"), data.get("amount"));
+  };
+
+
+  const requestLink = async (e) => {
+    e.preventDefault();
+    // const data = new FormData(e.target);
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    const signer = await provider.getSigner();
+
+    const daiContract = new ethers.Contract(address, AssuredPay.abi, signer);
+
+    // const orderstate = await daiContract.setOrderState(2);
+    // await orderstate.wait();
+
+    
+
+    // const balance = ethers.utils.formatEther(await daiContract.getbalance());
+    // console.log(balance);
+
+    const tx = await daiContract.requestDeliveryStatus(false);
+    await tx.wait();
 
     // console.log(Withdraw);
     // await erc20.transfer(data.get("recipient"), data.get("amount"));
@@ -104,6 +130,12 @@ const ContractRow = ({ address }) => {
             onClick={withdrawContract}
           >
             Withdraw
+          </button>
+          <button
+            className="px-3 py-2 mx-3 bg-gray-300 rounded-[5px] text-sm uppercase font-semibold"
+            onClick={requestLink}
+          >
+            Request Delivery
           </button>
           
         </div>

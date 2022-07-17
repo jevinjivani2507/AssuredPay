@@ -39,7 +39,7 @@ contract AssuredPayFactory is ChainlinkClient, ConfirmedOwner {
         );
         s_customers.push(_customer);
         s_contracts.push(contractAddress);
-        // ERC20(ERC677_LINK_ADDRESS).transfer(contractAddress, linkAmt);
+        ERC20(ERC677_LINK_ADDRESS).transfer(contractAddress, linkAmt);
 
         emit ContractCreated(contractAddress, _customer, i_vendor, _amount);
 
@@ -57,4 +57,6 @@ contract AssuredPayFactory is ChainlinkClient, ConfirmedOwner {
             "Unable to transfer"
         );
     }
+
+    
 }

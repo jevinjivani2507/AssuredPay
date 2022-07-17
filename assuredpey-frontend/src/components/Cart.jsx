@@ -49,8 +49,7 @@ function Cart() {
       value: ethers.utils.parseEther(amount.toString()),
     });
     const txReceipt = await txResponse.wait();
-
-    console.log(await assuredPayContract.balance());
+    console.log(await assuredPayContract.getBalance());
 
     // console.log(txReceipt);
   };

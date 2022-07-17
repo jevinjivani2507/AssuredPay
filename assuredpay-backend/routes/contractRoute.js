@@ -10,9 +10,12 @@ router.route("/").post(async (req, res) => {
   const products = req.body.products;
   const vendorAddress = req.body.vendorAddress.toString();
 
-  // console.log(customerAddress , vendorAddress , products.length);
+  console.log(customerAddress , vendorAddress , products.length);
 
   let amount = calculateTotal(products);
+
+  console.log(amount)
+
   try {
     let { customer, contractAddress } = await createContract(
       customerAddress,

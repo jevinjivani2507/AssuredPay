@@ -26,7 +26,7 @@ const Tracking = () => {
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(address, AssuredPay.abi, provider);
 
-      const balance = ethers.utils.formatEther(await contract.getbalance());
+      // const balance = ethers.utils.formatEther(await contract.getbalance());
       const paymentAmount = ethers.utils.formatEther(await contract.i_amount());
       const order = await contract.order();
       console.log(order);

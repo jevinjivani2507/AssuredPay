@@ -70,6 +70,10 @@ contract AssuredPay is ChainlinkClient, ConfirmedOwner {
         order = Order(orderId, provider);
     }
 
+    function getBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
+
     function pay() public payable {
         if (msg.value < i_amount) {
             revert AssuredPay__SufficientFundNotProvided();
@@ -108,11 +112,10 @@ contract AssuredPay is ChainlinkClient, ConfirmedOwner {
         return sendChainlinkRequest(req, fee);
     }
 
-    function getbalance() public view returns(uint256) {
-        return address(this).balance;
-    }
-
-    function fulfill(bytes32 _requestId, string memory _orderStatus) public {
+    function fulfill(bytes32 _requestId, string memory _orderStatus)
+        public
+        recordChainlinkFulfillment(_requestId)
+    {
         result = _orderStatus;
 
         if (_check(result, "Delivered")) {
@@ -131,19 +134,7 @@ contract AssuredPay is ChainlinkClient, ConfirmedOwner {
         bool isOrderStatusUpdated = false;
         bool isSufficientBalance = address(this).balance == i_amount;
 
-        if (msg.sender == i_customer) {
-            isOrderStatusUpdated = (s_orderState == OrderState.FAILED);
-
-            if (
-                !s_isTransactionFulfilled &&
-                isOrderStatusUpdated &&
-                isSufficientBalance
-            ) {
-                (callSuccess, ) = payable(i_customer).call{
-                    value: address(this).balance
-                }("");
-            }
-        } else if (msg.sender == i_vendor) {
+        if (msg.sender == i_vendor) {
             isOrderStatusUpdated = (s_orderState == OrderState.DELIVERED);
 
             if (
@@ -156,11 +147,23 @@ contract AssuredPay is ChainlinkClient, ConfirmedOwner {
                 }("");
             }
         }
+        else if (msg.sender == i_customer) {
+            isOrderStatusUpdated = (s_orderState == OrderState.FAILED);
+
+            if (
+                !s_isTransactionFulfilled &&
+                isOrderStatusUpdated &&
+                isSufficientBalance
+            ) {
+                (callSuccess, ) = payable(i_vendor).call{
+                    value: address(this).balance
+                }("");
+            }
+        } 
 
         if (callSuccess) {
             s_isTransactionFulfilled = true;
-        }
-        else{
+        } else {
             revert AssuredPay__TransactionNotCompleted();
         }
     }
