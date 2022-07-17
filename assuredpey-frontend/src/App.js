@@ -12,6 +12,7 @@ import Dashboard from "./components/Dashboard";
 import Vendor from "./components/Vendor";
 import Login from "./components/Login";
 import Tracking from "./components/Tracking";
+import Status from "./components/Status";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/Admin" element={<Vendor />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/Tracking/:address" element={<Tracking />} />
+            <Route path="/Status/:address" element={<Status />} />
           </Route>
         </Routes>
     </div>
