@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .navbarItem{
-    @apply text-gray-300 hover:bg-gray-700 hover:text-white px-5 py-2 rounded-md text-[1em] font-medium;
+    @apply flex text-gray-300 hover:bg-gray-700 hover:text-white px-5 rounded-md text-[1em] font-medium items-center;
 }
 
 .btn{

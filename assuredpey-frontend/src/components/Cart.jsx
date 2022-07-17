@@ -82,7 +82,7 @@ function Cart() {
 
   return (
     <div className="flex bg-[#FFFFFF] m-[4vh] rounded-[20px] shadow-lg">
-      <div className="flex flex-col w-3/4 overflow-scroll scrollbar-hide">
+      <div className="flex flex-col w-3/4 overflow-scroll scrollbar-hide h-[85vh]">
         <div className="top-0 sticky bg-[#FFFFFF] rounded-tl-[20px]">
           <header className="top-0 sticky flex justify-between border-b px-10 py-10">
             <h1 className="font-semibold text-2xl">Shopping Cart</h1>

@@ -3,7 +3,7 @@ import React, { useState} from "react";
 import { Link } from "react-router-dom";
 import logo from "../images/logo.png";
 import {faHouse, faCartShopping} from "@fortawesome/free-solid-svg-icons";
-import {maski} from "../images/maski.png";
+import maski from "../images/maski.png";
 import {ethers} from "ethers";
 import { useDispatch, useSelector } from "react-redux";
 import { ADD_TO_CART, REMOVE_FROM_CART, USER } from "../Redux/ActionTypes";
@@ -50,8 +50,13 @@ const Navbar = () => {
             <div className="navbarItem">
               <Link to="/Admin">Admin</Link>
             </div>
-            <div className="navbarItem">
-              <button onClick={connectMetaMask} className="btn h-10 w-[100px] px-4 truncate"> {user} </button>
+            <div className="mx-3">
+              <button onClick={connectMetaMask} className="btn flex h-10 w-[150px] px-4 gap-2 items-center"> 
+                <img src={maski} className="h-5 w-5" alt="" />
+                <div className="truncate">
+                  {user}
+                </div> 
+              </button>
             </div>
           </div>
         </div>
