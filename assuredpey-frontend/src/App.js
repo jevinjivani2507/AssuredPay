@@ -11,6 +11,7 @@ import Cart from "./components/Cart";
 import Dashboard from "./components/Dashboard";
 import Vendor from "./components/Vendor";
 import Login from "./components/Login";
+import Tracking from "./components/Tracking";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path="/Cart" element={<Cart />} />
             <Route path="/Admin" element={<Vendor />} />
             <Route path="/Login" element={<Login />} />
+            <Route path="/Tracking/:address" element={<Tracking />} />
           </Route>
         </Routes>
     </div>

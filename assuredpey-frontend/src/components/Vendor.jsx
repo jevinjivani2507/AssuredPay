@@ -51,16 +51,19 @@ const Vendor = () => {
   }
 
   useEffect(() => {
-    getContract(vendorContractAddress).then((constracts) => setContracts(constracts));
+    if(vendorContractAddress.length > 0 ) {
+      getContract(vendorContractAddress).then((constracts) => setContracts(constracts));
+    }
+    
   }, []);
 
   return (
     <div className="bg-gray-100 min-h-[91vh] h-full p-10">
       { 
         (vendorContractAddress.length > 0) ? (
-          <div className="">
+          <div className=" mb-10">
             <span className = "bg-black btn px-4 py-3 text-white">Vendor Contract</span>
-             <span className = " px-4 py-3 border-solid border-indigo-300 border-2 rounded-[5px]">{vendorContractAddress}</span>
+             <span className = "solid  px-4 py-3 border-solid ">{vendorContractAddress}</span>
           </div>
         ) : (<button
           className="btn py-3 px-4 text-white"

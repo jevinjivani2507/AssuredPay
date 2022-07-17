@@ -1,76 +1,119 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import Item from "./Item";
 import { useDispatch, useSelector } from "react-redux";
-import { ADD_TO_CART, REMOVE_FROM_CART, USER , VENDOR_CONTRACT_ADDRESS } from "../Redux/ActionTypes";
+import {
+  ADD_TO_CART,
+  REMOVE_FROM_CART,
+  USER,
+  VENDOR_CONTRACT_ADDRESS,
+} from "../Redux/ActionTypes";
 import axios from "axios";
+import AssuredPay from "../contracts/AssuredPay";
+import { ethers } from "ethers";
 
 function Cart() {
   const dispatch = useDispatch();
   const items = useSelector((state) => state.cart.items);
   const user = useSelector((state) => state.cart.user);
-  const vendorContractAddress = useSelector((state) => state.cart.vendorContractAddress);
+  const vendorContractAddress = useSelector(
+    (state) => state.cart.vendorContractAddress
+  );
 
   // console.log(user);
   // console.log(vendorContractAddress);
-
 
   const removeToCart = (e) => {
     e.preventDefault();
     dispatch({ type: REMOVE_FROM_CART });
   };
 
-  const [payment, setPayment] = useState([]);
+  const [paymentDetails, setPaymentDetails] = useState("");
+
+  const makePayment = async () => {
+    const { contractAddress, amount } = JSON.parse(
+      JSON.stringify(paymentDetails)
+    );
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    const signer = provider.getSigner();
+
+    const assuredPayContract = new ethers.Contract(
+      contractAddress,
+      AssuredPay.abi,
+      signer
+    );
+
+    const txResponse = await assuredPayContract.pay({
+      value: ethers.utils.parseEther(amount.toString()),
+    });
+    const txReceipt = await txResponse.wait();
+
+    console.log(await assuredPayContract.balance());
+
+    // console.log(txReceipt);
+  };
+
+  useEffect(() => {
+    console.log(JSON.stringify(paymentDetails).length)
+    if(JSON.stringify(paymentDetails).length > 2){
+      makePayment();
+    }
+    
+  }, [paymentDetails]);
 
   const fetchPayment = async (e) => {
     e.preventDefault();
-
-    console.log( typeof user);
-
     const payload = {
-      "customerAddress" : user,
-      "vendorAddress" : vendorContractAddress,
-      "products" : items,
-    }
-    await axios.post("http://localhost:5000/createContract", payload).then(res => {
-      console.log(res.data);
-      setPayment(res.data);
-    });
+      customerAddress: user,
+      vendorAddress: vendorContractAddress,
+      products: items,
+    };
+
+    await axios
+      .post("http://localhost:5000/createContract", payload)
+      .then((res) => {
+        // console.log(res.data);
+        setPaymentDetails(res.data);
+
+        // makePayment();
+      });
   };
 
   return (
     <div className="flex bg-[#FFFFFF] m-[4vh] rounded-[20px] shadow-lg">
       <div className="flex flex-col w-3/4 overflow-scroll scrollbar-hide">
         <div className="top-0 sticky bg-[#FFFFFF] rounded-tl-[20px]">
-        <header className="flex justify-between border-b px-10 py-10">
-          <h1 className="font-semibold text-2xl">Shopping Cart</h1>
-          <h2 className="font-semibold text-2xl">{items.length} Items</h2>
-        </header>
-        <div className="flex mt-5 mb-5 px-10 justify-center">
-          <h3 className="font-semibold text-gray-600 text-xs uppercase w-2/5">
-            Product Details
-          </h3>
-          <h3 className="font-semibold text-center text-gray-600 text-xs uppercase w-1/5">
-            Quantity
-          </h3>
-          <h3 className="font-semibold text-center text-gray-600 text-xs uppercase w-1/5">
-            Price
-          </h3>
-          <h3 className="font-semibold text-center text-gray-600 text-xs uppercase w-1/5">
-            Total
-          </h3>
-        </div>
+          <header className="top-0 sticky flex justify-between border-b px-10 py-10">
+            <h1 className="font-semibold text-2xl">Shopping Cart</h1>
+            <h2 className="font-semibold text-2xl">{items.length} Items</h2>
+          </header>
+          <div className="flex mt-5 mb-5 px-10 justify-center">
+            <h3 className="font-semibold text-gray-600 text-xs uppercase w-2/5">
+              Product Details
+            </h3>
+            <h3 className="font-semibold text-center text-gray-600 text-xs uppercase w-1/5">
+              Quantity
+            </h3>
+            <h3 className="font-semibold text-center text-gray-600 text-xs uppercase w-1/5">
+              Price
+            </h3>
+            <h3 className="font-semibold text-center text-gray-600 text-xs uppercase w-1/5">
+              Total
+            </h3>
+          </div>
         </div>
 
         <div className="">
-          {items.length>0 && Object.values(items
-            .reduce((acc, item) => {
-
-              const tempVer = acc;
-              tempVer[item.id] = tempVer[item.id] || [];
-              tempVer[item.id].push(item);
-              return tempVer;
-            }, {}))
-            .map((pId) => (
+          {items.length > 0 &&
+            Object.values(
+              items.reduce((acc, item) => {
+                const tempVer = acc;
+                tempVer[item.id] = tempVer[item.id] || [];
+                tempVer[item.id].push(item);
+                return tempVer;
+              }, {})
+            ).map((pId) => (
               <Item
                 key={pId[0].id}
                 id={pId[0].id}
@@ -124,7 +167,9 @@ function Cart() {
             <span>$600</span>
           </div>
           <div className="flex">
-            <button className="btn py-3 w-full ml-1" onClick={fetchPayment} >AssuredPay</button>
+            <button className="btn py-3 w-full ml-1" onClick={fetchPayment}>
+              AssuredPay
+            </button>
             {/* <button className="btn py-3 w-full ml-1">Ashortpay</button> */}
           </div>
         </div>

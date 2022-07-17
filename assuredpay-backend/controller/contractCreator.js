@@ -9,14 +9,15 @@ const PRIVATE_KEY = process.env.RINKEBY_PRIVATE_KEY;
 async function createContract(customerAddress, vendorAddress , paymentAmount, test = false) {
   let API_KEY, PRIVATE_KEY, CONTRACT_ADDRESS;
   test = true;
+  CONTRACT_ADDRESS = vendorAddress;
   if (!test) {
-    API_KEY = process.env.RINKEBY_API_KEY;
-    PRIVATE_KEY = process.env.RINKEBY_PRIVATE_KEY;
-    CONTRACT_ADDRESS = process.env.FACTORY_ADDRESS;
+    // API_KEY = process.env.RINKEBY_API_KEY;
+    // PRIVATE_KEY = process.env.RINKEBY_PRIVATE_KEY;
+    // CONTRACT_ADDRESS = process.env.FACTORY_ADDRESS;
   } else {
     PRIVATE_KEY =
       "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-    CONTRACT_ADDRESS = vendorAddress;
+    
   }
 
   const contractAbi = fs.readFileSync("./abis/AssuredPayFactory.abi", "utf8");

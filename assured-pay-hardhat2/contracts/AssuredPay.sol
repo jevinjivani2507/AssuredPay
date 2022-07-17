@@ -8,6 +8,7 @@ import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 error AssuredPay__SufficientFundNotProvided();
 error AssuredPay__TractionAlreadyCompleted();
 error AssuredPay__OrderNotSet();
+error AssuredPay__TransactionNotCompleted();
 
 contract AssuredPay is ChainlinkClient, ConfirmedOwner {
     using Chainlink for Chainlink.Request;
@@ -32,8 +33,8 @@ contract AssuredPay is ChainlinkClient, ConfirmedOwner {
     uint256 private immutable fee = (1 * LINK_DIVISIBILITY) / 10;
 
     // Contract participants
-    address payable private immutable i_vendor;
-    address payable private immutable i_customer;
+    address payable public immutable i_vendor;
+    address payable public immutable i_customer;
     uint256 public immutable i_amount;
 
     // Order Variable
@@ -107,6 +108,10 @@ contract AssuredPay is ChainlinkClient, ConfirmedOwner {
         return sendChainlinkRequest(req, fee);
     }
 
+    function getbalance() public view returns(uint256) {
+        return address(this).balance;
+    }
+
     function fulfill(bytes32 _requestId, string memory _orderStatus) public {
         result = _orderStatus;
 
@@ -134,7 +139,7 @@ contract AssuredPay is ChainlinkClient, ConfirmedOwner {
                 isOrderStatusUpdated &&
                 isSufficientBalance
             ) {
-                (callSuccess, ) = payable(i_vendor).call{
+                (callSuccess, ) = payable(i_customer).call{
                     value: address(this).balance
                 }("");
             }
@@ -154,6 +159,9 @@ contract AssuredPay is ChainlinkClient, ConfirmedOwner {
 
         if (callSuccess) {
             s_isTransactionFulfilled = true;
+        }
+        else{
+            revert AssuredPay__TransactionNotCompleted();
         }
     }
 
