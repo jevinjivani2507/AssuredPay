@@ -32,7 +32,7 @@ const Item = (props) => {
 
 
   return (
-    <div className="flex items-center hover:bg-gray-100 px-6 py-5 mx-3">
+    <div className="flex items-center hover:bg-gray-100 hover:rounded-[20px] px-6 py-5 mx-3">
       <div className="flex w-2/5">
         <div className="w-20">
           <img
@@ -43,14 +43,14 @@ const Item = (props) => {
         <div className="flex flex-col jus ml-4 mt-4">
           <span className="font-bold text-sm">{props.name}</span>
           <span className="text-[#222831] text-xs mt-2">{props.company}</span>
-          <button className="text-red-400 text-xs mt-2" onClick={removeToCart}>Remove</button>
+          <span className="text-red-400 text-xs cursor-default mt-2" onClick={removeToCart}>Remove</span>
         </div>
       </div>
       <div className="flex justify-center w-1/5">
         <button onClick={handleQuantityMinus}>
           <FontAwesomeIcon icon={faMinus} />
         </button>
-        <input readOnly className="mx-2 border text-center w-8" type="text" value={props.quantity} />
+        <input readOnly className="mx-2 border text-center w-8" type="text" value={quantity} />
         <button onClick={handleQuantityPlus}>
           <FontAwesomeIcon icon={faPlus} />
         </button>
