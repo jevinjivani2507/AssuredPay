@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import factoryContractABI from "../ABI/factoryContractABI";
 import { ethers, ContractFactory } from "ethers";
 import ContractRow from "./ContractRow";
 import { provider, signer, daiAddress, daiAbi } from "../contractConfig";
@@ -19,13 +18,13 @@ const Vendor = () => {
 
   const [contracts, setContracts] = useState([]);
 
-  const daiContract = new ethers.Contract(daiAddress, daiAbi, provider);
+  
 
   // console.log(AssuredPayFactory.abi);
 
   const createVendorContract = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    // await provider.send("eth_requestAccounts", []);
+    await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
 
     const factory = new ContractFactory(
@@ -33,20 +32,26 @@ const Vendor = () => {
       AssuredPayFactory.bytecode,
       signer
     );
-    console.log(factory);
     const contract = await factory.deploy();
     const txreceipt = await contract.deployTransaction.wait(1);
 
     dispatch({ type: VENDOR_CONTRACT_ADDRESS, payload: contract.address });
   };
 
+  async function getContract(address) {
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    const signer = provider.getSigner();
+
+    const daiContract = new ethers.Contract(address, AssuredPayFactory.abi, provider);
+    const contractAddresses = await daiContract.getContracts();
+    // const result = address.forEach(element => {console.log(element)});
+    return contractAddresses;
+  }
+
   useEffect(() => {
-    async function getContract() {
-      const address = await daiContract.getContracts();
-      // const result = address.forEach(element => {console.log(element)});
-      return address;
-    }
-    getContract().then((constracts) => setContracts(constracts));
+    getContract(vendorContractAddress).then((constracts) => setContracts(constracts));
   }, []);
 
   return (

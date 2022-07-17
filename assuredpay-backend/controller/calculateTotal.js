@@ -6,8 +6,8 @@ module.exports = (cartproducts) => {
   cartproducts.forEach((cartproduct) => {
     total +=
       products.filter((product) => product.id === cartproduct.id)[0].mrp *
-      cartproduct.qty;
+      cartproducts.length;
   });
 
-  return total;
+  return isNaN(total) ? 0 : total;
 };

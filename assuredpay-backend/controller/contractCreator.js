@@ -4,9 +4,9 @@ const { ethers } = require("ethers");
 
 const API_KEY = process.env.RINKEBY_API_KEY;
 const PRIVATE_KEY = process.env.RINKEBY_PRIVATE_KEY;
-const CONTRACT_ADDRESS = process.env.FACTORY_ADDRESS;
+// const CONTRACT_ADDRESS = process.env.FACTORY_ADDRESS;
 
-async function createContract(customerAddress, paymentAmount, test = false) {
+async function createContract(customerAddress, vendorAddress , paymentAmount, test = false) {
   let API_KEY, PRIVATE_KEY, CONTRACT_ADDRESS;
   test = true;
   if (!test) {
@@ -16,7 +16,7 @@ async function createContract(customerAddress, paymentAmount, test = false) {
   } else {
     PRIVATE_KEY =
       "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-    CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+    CONTRACT_ADDRESS = vendorAddress;
   }
 
   const contractAbi = fs.readFileSync("./abis/AssuredPayFactory.abi", "utf8");

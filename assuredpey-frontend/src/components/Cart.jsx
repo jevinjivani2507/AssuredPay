@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Item from "./Item";
 import { useDispatch, useSelector } from "react-redux";
-import { ADD_TO_CART, REMOVE_FROM_CART,VENDOR_CONTRACT_ADDRESS } from "../Redux/ActionTypes";
+import { ADD_TO_CART, REMOVE_FROM_CART, USER , VENDOR_CONTRACT_ADDRESS } from "../Redux/ActionTypes";
 import axios from "axios";
 
 function Cart() {
@@ -23,11 +23,14 @@ function Cart() {
 
   const fetchPayment = async (e) => {
     e.preventDefault();
+
+    console.log( typeof user);
+
     const payload = {
-      "customer" : "0x747e43173374aa39D70a014AB18C7E9e762fE5b9",
+      "customerAddress" : user,
+      "vendorAddress" : vendorContractAddress,
       "products" : items,
     }
-    console.log("Yey, I am clicked");
     await axios.post("http://localhost:5000/createContract", payload).then(res => {
       console.log(res.data);
       setPayment(res.data);

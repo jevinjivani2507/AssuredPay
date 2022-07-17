@@ -6,13 +6,16 @@ require("dotenv").config();
 const router = express.Router();
 
 router.route("/").post(async (req, res) => {
-  const customerAddress = req.body.customer;
-  const product = req.body.products;
-  let amount = calculateTotal(product);
+  const customerAddress = req.body.customerAddress.toString();
+  const products = req.body.products;
+  const vendorAddress = req.body.vendorAddress.toString();
 
+  let amount = calculateTotal(products);
+  console.log(amount);
   try {
     let { customer, contractAddress } = await createContract(
       customerAddress,
+      vendorAddress,
       amount
     );
 
