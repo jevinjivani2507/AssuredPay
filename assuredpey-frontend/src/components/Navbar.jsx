@@ -1,11 +1,32 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useState} from "react";
 import { Link } from "react-router-dom";
 import logo from "../images/logo.png";
 import {faHouse, faCartShopping} from "@fortawesome/free-solid-svg-icons";
 import {maski} from "../images/maski.png";
+import {ethers} from "ethers";
+import { useDispatch, useSelector } from "react-redux";
+import { ADD_TO_CART, REMOVE_FROM_CART, USER } from "../Redux/ActionTypes";
 
 const Navbar = () => {
+
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.cart.user);
+
+
+  const connectMetaMask = async () => {
+    window.ethereum.enable();
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    const accounts = await provider.listAccounts();
+    const account = accounts[0];
+    
+
+    dispatch({ type: USER, payload: account });
+    console.log(account);
+
+  }
+
   return (
     <nav className="top-0 sticky bg-[#222831]">
       <div className="flex items-center h-[65px] px-[60px]">
@@ -27,11 +48,10 @@ const Navbar = () => {
               <Link to="/Cart">Cart : 0</Link>
             </div>
             <div className="navbarItem">
-              <Link to="/Vendor">Vendor</Link>
+              <Link to="/Admin">Admin</Link>
             </div>
             <div className="navbarItem">
-              {/* <img src={maski} alt="" className="h-3 w-3" /> */}
-              <Link to="/Cart">Connect</Link>
+              <button onClick={connectMetaMask} className="btn h-10 w-[100px] px-4 truncate"> {user} </button>
             </div>
           </div>
         </div>

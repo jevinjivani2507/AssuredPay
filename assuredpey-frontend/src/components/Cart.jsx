@@ -1,23 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
 import Item from "./Item";
 import { useDispatch, useSelector } from "react-redux";
-import { ADD_TO_CART, REMOVE_FROM_CART } from "../Redux/ActionTypes";
+import { ADD_TO_CART, REMOVE_FROM_CART,VENDOR_CONTRACT_ADDRESS } from "../Redux/ActionTypes";
+import axios from "axios";
 
 function Cart() {
   const dispatch = useDispatch();
   const items = useSelector((state) => state.cart.items);
+  const user = useSelector((state) => state.cart.user);
+  const vendorContractAddress = useSelector((state) => state.cart.vendorContractAddress);
+
+  // console.log(user);
+  // console.log(vendorContractAddress);
+
+
   const removeToCart = (e) => {
     e.preventDefault();
     dispatch({ type: REMOVE_FROM_CART });
   };
+
+  const [payment, setPayment] = useState([]);
+
+  const fetchPayment = async (e) => {
+    e.preventDefault();
+    const payload = {
+      "customer" : "0x747e43173374aa39D70a014AB18C7E9e762fE5b9",
+      "products" : items,
+    }
+    console.log("Yey, I am clicked");
+    await axios.post("http://localhost:5000/createContract", payload).then(res => {
+      console.log(res.data);
+      setPayment(res.data);
+    });
+  };
+
   return (
-    <div className="flex bg-[#FFFFFF] mx-[30px] my-[30px] rounded-[20px] shadow-lg h-[83.5vh]">
+    <div className="flex bg-[#FFFFFF] m-[4vh] rounded-[20px] shadow-lg">
       <div className="flex flex-col w-3/4 overflow-scroll scrollbar-hide">
-        <header className="top-0 sticky flex justify-between border-b px-10 py-10 bg-[#FFFFFF] rounded-tl-[20px]">
+        <div className="top-0 sticky bg-[#FFFFFF] rounded-tl-[20px]">
+        <header className="flex justify-between border-b px-10 py-10">
           <h1 className="font-semibold text-2xl">Shopping Cart</h1>
           <h2 className="font-semibold text-2xl">{items.length} Items</h2>
         </header>
-        <div className="flex mt-10 mb-5 pl-5 justify-center">
+        <div className="flex mt-5 mb-5 px-10 justify-center">
           <h3 className="font-semibold text-gray-600 text-xs uppercase w-2/5">
             Product Details
           </h3>
@@ -30,6 +55,7 @@ function Cart() {
           <h3 className="font-semibold text-center text-gray-600 text-xs uppercase w-1/5">
             Total
           </h3>
+        </div>
         </div>
 
         <div className="">
@@ -95,8 +121,8 @@ function Cart() {
             <span>$600</span>
           </div>
           <div className="flex">
-            <button className="btn py-3 w-full ml-1">Ashortpay</button>
-            <button className="btn py-3 w-full ml-1">Ashortpay</button>
+            <button className="btn py-3 w-full ml-1" onClick={fetchPayment} >AssuredPay</button>
+            {/* <button className="btn py-3 w-full ml-1">Ashortpay</button> */}
           </div>
         </div>
       </div>

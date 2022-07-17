@@ -43,7 +43,7 @@ const Item = (props) => {
         <div className="flex flex-col jus ml-4 mt-4">
           <span className="font-bold text-sm">{props.name}</span>
           <span className="text-[#222831] text-xs mt-2">{props.company}</span>
-          <span className="text-red-400 text-xs cursor-default mt-2" onClick={removeToCart}>Remove</span>
+          <span className="text-red-400 text-xs cursor-pointer mt-2" onClick={removeToCart}>Remove</span>
         </div>
       </div>
       <div className="flex justify-center w-1/5">

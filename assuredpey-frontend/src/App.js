@@ -10,6 +10,7 @@ import Navbar from "./components/Navbar";
 import Cart from "./components/Cart";
 import Dashboard from "./components/Dashboard";
 import Vendor from "./components/Vendor";
+import Login from "./components/Login";
 
 function App() {
   return (
@@ -25,7 +26,8 @@ function App() {
           >
             <Route path="/" element={<Dashboard />} />
             <Route path="/Cart" element={<Cart />} />
-            <Route path="/Vendor" element={<Vendor />} />
+            <Route path="/Admin" element={<Vendor />} />
+            <Route path="/Login" element={<Login />} />
           </Route>
         </Routes>
     </div>
