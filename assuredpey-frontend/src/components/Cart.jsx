@@ -9,6 +9,7 @@ import {
 } from "../Redux/ActionTypes";
 import axios from "axios";
 import AssuredPay from "../contracts/AssuredPay";
+import AssuredPayFactory from "../contracts/AssuredPayFactory";
 import { ethers } from "ethers";
 
 function Cart() {
@@ -31,6 +32,10 @@ function Cart() {
   const [paymentDetails, setPaymentDetails] = useState("");
 
   const makePayment = async () => {
+    console.log(paymentDetails);
+    console.log(JSON.stringify(paymentDetails).length);
+    if (JSON.stringify(paymentDetails).length <=2) return;
+
     const { contractAddress, amount } = JSON.parse(
       JSON.stringify(paymentDetails)
     );
@@ -54,14 +59,14 @@ function Cart() {
     // console.log(txReceipt);
   };
 
-  useEffect(() => {
-    console.log(JSON.stringify(paymentDetails).length);
-    if (JSON.stringify(paymentDetails).length > 2) {
-      makePayment();
-    }
-  }, [paymentDetails]);
+  // useEffect(() => {
+  //   console.log(JSON.stringify(paymentDetails).length);
+  //   if (JSON.stringify(paymentDetails).length > 2) {
+  //     makePayment();
+  //   }
+  // }, [paymentDetails]);
 
-  const fetchPayment = async (e) => {
+  const createContract = async (e) => {
     e.preventDefault();
     const payload = {
       customerAddress: user,
@@ -69,14 +74,51 @@ function Cart() {
       products: items,
     };
 
-    await axios
-      .post("http://localhost:5000/createContract", payload)
-      .then((res) => {
-        // console.log(res.data);
-        setPaymentDetails(res.data);
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    const signer = provider.getSigner();
 
-        // makePayment();
-      });
+    const assuredPayFactoryContract = new ethers.Contract(
+      vendorContractAddress,
+      AssuredPayFactory.abi,
+      signer
+    );
+
+    const amount = items.reduce((acc, item) => {
+      return acc + item.mrp;
+    }, 0).toFixed(4).toString();
+
+    // console.log(ethers.utils.parseEther(amount));
+    // console.log(ethers.utils.formatEther(ethers.utils.parseEther(amount)));
+    const tx = await assuredPayFactoryContract.createContract(user.toString() , ethers.utils.parseEther(amount) );
+    const rc = await tx.wait();
+
+    console.log(rc);
+
+    const event = rc.events.find((event) => event.event === "ContractCreated");
+    const [contractAddress, customer, vendor, amt] = event.args;
+
+    console.log(contractAddress, customer, vendor, amt);
+    console.log(ethers.utils.formatEther(amt));
+    setPaymentDetails({
+      "contractAddress" : contractAddress.toString(),
+      "amount" : ethers.utils.formatEther(amt),
+      "customerAddress" : customer.toString(),
+      "vendorAddress" : vendor.toString(),
+    });
+
+    console.log(contractAddress);
+
+    // console.log(await )
+
+    // await axios
+    //   .post("http://3.110.90.58:5000/createContract", payload)
+    //   .then((res) => {
+    //     // console.log(res.data);
+    //     setPaymentDetails(res.data);
+
+    //     // makePayment();
+    //   });
   };
 
   return (
@@ -179,7 +221,13 @@ function Cart() {
             </span>
           </div>
           <div className="flex">
-            <button className="btn py-3 w-full ml-1" onClick={fetchPayment}>
+            <button className="btn py-3 w-full ml-1" onClick={createContract}>
+              Create Contract
+            </button>
+            {/* <button className="btn py-3 w-full ml-1">Ashortpay</button> */}
+          </div>
+          <div className="flex">
+            <button className="btn py-3 w-full ml-1 mt-2" onClick={makePayment}>
               AssuredPay
             </button>
             {/* <button className="btn py-3 w-full ml-1">Ashortpay</button> */}

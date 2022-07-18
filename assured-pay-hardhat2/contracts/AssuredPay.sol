@@ -10,7 +10,7 @@ error AssuredPay__TractionAlreadyCompleted();
 error AssuredPay__OrderNotSet();
 error AssuredPay__TransactionNotCompleted();
 
-contract AssuredPay is ChainlinkClient, ConfirmedOwner {
+contract AssuredPay is ChainlinkClient{
     using Chainlink for Chainlink.Request;
 
     struct Order {
@@ -54,7 +54,7 @@ contract AssuredPay is ChainlinkClient, ConfirmedOwner {
         address _vendor,
         address _customer,
         uint256 _amount
-    ) ConfirmedOwner(_vendor) {
+    ){
         //configure Oracle
         setChainlinkToken(ERC677_LINK_ADDRESS);
         setChainlinkOracle(s_oracleAddress);
@@ -84,7 +84,6 @@ contract AssuredPay is ChainlinkClient, ConfirmedOwner {
 
     function requestDeliveryStatus(bool _mock)
         public
-        onlyOwner
         returns (bytes32 requestId)
     {
         if (
@@ -211,7 +210,7 @@ contract AssuredPay is ChainlinkClient, ConfirmedOwner {
             keccak256(abi.encodePacked((string2))));
     }
 
-    function withdrawLink() public onlyOwner {
+    function withdrawLink() public  {
         LinkTokenInterface link = LinkTokenInterface(ERC677_LINK_ADDRESS);
         require(
             link.transfer(msg.sender, link.balanceOf(address(this))),

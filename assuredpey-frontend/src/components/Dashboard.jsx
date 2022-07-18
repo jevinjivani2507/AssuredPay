@@ -7,7 +7,7 @@ const Dashboard = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/products").then(res => {
+    axios.get("http://3.110.90.58:5000/products").then(res => {
       // console.log(res.data);
       setProducts(res.data);
     });
