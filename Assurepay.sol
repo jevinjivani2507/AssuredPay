@@ -29,7 +29,7 @@ contract AssuredPay is ChainlinkClient,ConfirmedOwner {
 
     // Oracle Variable
     address public ERC677_LINK_ADDRESS = 0x01BE23585060835E02B77ef475b0Cc51aA1e0709;
-    address public s_oracleAddress = 0x6F527C87614b1CB5084820f96c95A609FE44B866;
+    address public s_oracleAddress = ORCLE_ADDRESS;
     bytes32 public jobId = "5feb959c89d3408aac38b0bbba056fa7";
     uint256 private immutable fee = (1 * LINK_DIVISIBILITY) / 10;
 
